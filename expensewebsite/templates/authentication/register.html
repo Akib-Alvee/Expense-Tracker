@@ -10,7 +10,9 @@
                 <div class="card-title py-3">
                     <h4>Register for a free account</h4>
                 </div>
-                <form action="" method="post">
+                <form action="{% url 'register' %}" method="post">
+                    {% csrf_token %}
+                    {% include 'partials/_messages.html' %}
 
                     <div class="mb-3">
                         <input type="text" name="username" placeholder="User Name" id="usernameField" class="form-control form-control-sm" />

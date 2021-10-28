@@ -2,16 +2,19 @@ const usernameField = document.querySelector('#usernameField');
 const feedBackArea = document.querySelector(".invalid_feedback"); 
 const emailField = document.querySelector("#emailField");
 const emailFeedBackArea = document.querySelector(".emailFeedBackArea")
+const passwordField = document.querySelector("#passwordField")
 const usernameSuccessOutput = document.querySelector(".usernameSuccessOutput");
-const showPasswordToogle = document.querySelector(".showPasswordToogle")
-const passwordField = document.querySelector(".passwordField");
+const showPasswordToogle = document.querySelector(".showPasswordToogle");
+
 
 const handleToggleInput = (e) => {
     if (showPasswordToogle.textContent == "SHOW" ){
         showPasswordToogle.textContent = "HIDE";
+        passwordField.setAttribute("type","text");
     }
     else {
-        showPasswordToogle.textContent = "SHOW";
+        showPasswordToogle.textContent = "SHOW"; 
+        passwordField.setAttribute("type","password");
     }
 };
 
