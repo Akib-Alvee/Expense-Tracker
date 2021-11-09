@@ -6,6 +6,12 @@ import json
 from validate_email import validate_email  
 from django.contrib import messages
 from django.core.mail import EmailMessage
+from django.contrib import auth
+from django.urls import reverse
+from django.utils.encoding import force_bytes,force_text,DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from django.contrib.sites.shortcuts import get_current_site
+from.utils import token_generator
 
 
 # Create your views here.
@@ -63,17 +69,36 @@ class RegistrationView(View):
                 user.is_active = False
                 user.save()
                 
+                # path to view
+                # -getting domain we are on
+                # -relative url to verification
+                # -encode uid
+                # -token
+                
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                
+                domain = get_current_site(request).domain
+                link = reverse('activate',kwargs={'uidb64':uidb64,'token':token_generator.make_token(user)})
+                
+                activate_url = 'http://'+domain+link
+                
                 email_subject = 'Activate your account'
-                email_body = ''
+                email_body = 'Hi '+user.username+'please use this link to verify your account\n'+activate_url
                 email = EmailMessage(
                     email_subject,
                     email_body,
                     'noreply@semycolon.com',
                     [email],
                 )
-                email.send(fail_silently=False)
+                email.send(fail_silently = True)
                 messages.success(request,'Congratulations! Account successfully created.')
         
         return render(request,'authentication/register.html')
+    
+
+class VerificationView(View):
+    def get(self,request,uidb64,token):
+        return redirect('login')
+    
 
  
